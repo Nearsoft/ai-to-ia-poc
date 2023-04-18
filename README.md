@@ -18,9 +18,9 @@ The project uses the following tech stack:
 
 * Generative AI tools: Copilot, ChatGPT (GPT-4) and (optionally) Claude.
 * Language: Python v3.11.x.
-* IDE: Visual Studio Code v1.77.0+. Extensions: Python (from Microsoft), Pylint, Black Formatter (from Microsoft).
-* Virtual environments/package management: pipenv.
+* IDE: Visual Studio Code v1.77.0+. Extensions: `Python` (from Microsoft), `Pylint`, `Black Formatter` (from Microsoft).
+* Virtual environments/package management: `pipenv`.
 * Code quality: 
-  * Linting: pylint. 
-  * Formatting: black.
-  * Security: bandit. 
+  * Linting: `pylint`. 
+  * Formatting: `black`.
+  * Security: `bandit`. 
