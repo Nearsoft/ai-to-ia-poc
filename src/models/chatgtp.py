@@ -1,6 +1,6 @@
 import os
 import requests
-from abstract_model import AbstractModel
+from models.abstract_model import AbstractModel
 
 
 class ChatGTP(AbstractModel):
@@ -30,4 +30,13 @@ class ChatGTP(AbstractModel):
             raise Exception("Error: ", response.status_code, response.text)
 
     def parse(self, result):
-        return result
+        pass
+
+    def model_id():
+        pass
+
+    def name():
+        pass
+
+    def platform(self):
+        pass
