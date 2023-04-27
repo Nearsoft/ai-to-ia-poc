@@ -5,20 +5,20 @@ Abstract class for models. All models must inherit from this class.
 import abc
 from typing import Dict
 
+
 class AbstractModel(metaclass=abc.ABCMeta):
     """
     Abstract class for models with a minimal set of attributes and methods that
     the `Orchestrator` (`src/core/orchestrator.py`) will expect to be available.
-    
+
     Attributes
     ----------
     id :: (str): Unique, platfomr dependent identifier for the model.
     name :: (str): Human readable identifier for the model.
     platform :: (str): Origin platform for the model.
-    
+
     Methods
     -------
-    initialize :: (None): Initialize the model. Model dependent.
     execute :: (None): Execute the model. Model dependent.
     parse :: (dict): Parse the results from model execution and return them.
     """
@@ -26,14 +26,12 @@ class AbstractModel(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
-            hasattr(subclass, "id")
-            and callable(subclass.id)
+            hasattr(subclass, "model_id")
+            and callable(subclass.model_id)
             and hasattr(subclass, "name")
             and callable(subclass.name)
             and hasattr(subclass, "platform")
             and callable(subclass.platform)
-            and hasattr(subclass, "initialize")
-            and callable(subclass.initialize)
             and hasattr(subclass, "execute")
             and callable(subclass.execute)
             and hasattr(subclass, "parse")
@@ -44,7 +42,7 @@ class AbstractModel(metaclass=abc.ABCMeta):
     @property
     @abc.abstractmethod
     def model_id(self):
-        """str: Unique, platform dependent identifier for the model. """
+        """str: Unique, platform dependent identifier for the model."""
         raise NotImplementedError
 
     @property
@@ -60,17 +58,13 @@ class AbstractModel(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def initialize(self):
-        """Initialize the model. Model dependent."""
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def execute(self, result: Dict[str, object]):
+    def execute(self, prompt: str, result: Dict[str, object]):
         """
         Execute the model. Model dependent.
-        
+
         Parameters
         ----------
+        TODO: Change result type.
         result :: (Dict[str, object]): Result from the previous model's execution.
         """
         raise NotImplementedError
