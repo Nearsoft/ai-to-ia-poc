@@ -1,4 +1,7 @@
-"""Metadata module. Used to store metadata for use by the `PlanGenerator`."""
+"""
+Metadata module. Used to store metadata for use by the `PlanGenerator`
+(`src/core/plan_generator.py`).
+"""
 class Metadata:
     """
     Metadata class. Contains metadata from the user's input.
@@ -11,6 +14,7 @@ class Metadata:
     skill :: (str): The skill required to answer the question.
     difficulty :: (str): The difficulty of the question.
     """
+
     # TODO (jhernandez): Change the types above/below to enums.
     def __init__(
             self,

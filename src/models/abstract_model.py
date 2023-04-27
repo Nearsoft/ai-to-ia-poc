@@ -22,6 +22,7 @@ class AbstractModel(metaclass=abc.ABCMeta):
     execute :: (None): Execute the model. Model dependent.
     parse :: (dict): Parse the results from model execution and return them.
     """
+
     @classmethod
     def __subclasshook__(cls, subclass):
         return (

@@ -1,4 +1,7 @@
-"""PlanGenerator module. Does plan generation for the `Orchestrator`."""
+"""
+PlanGenerator module. Does plan generation for the `Orchestrator`
+(`src/core/orchestrator.py`).
+"""
 
 from typing import Dict
 from metadata import Metadata
@@ -28,3 +31,5 @@ class PlanGenerator:
         }
 
         return plan
+
+# TODO (jhernandez, kapioma): Should we add a `Plan` class?
