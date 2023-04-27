@@ -2,6 +2,7 @@
 Metadata module. Used to store metadata for use by the `PlanGenerator`
 (`src/core/plan_generator.py`).
 """
+
 class Metadata:
     """
     Metadata class. Contains metadata from the user's input.
