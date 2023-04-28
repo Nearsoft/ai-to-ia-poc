@@ -3,8 +3,11 @@ PlanGenerator module. Does plan generation for the `Orchestrator`
 (`src/core/orchestrator.py`).
 """
 
+import json
 from typing import Dict
 from src.core.metadata import Metadata
+from src.models.chatgpt import ChatGPT, GPTTools
+from src.models.gpt_tools import prompt_plan_generator
 
 class PlanGenerator:
     """
@@ -12,13 +15,11 @@ class PlanGenerator:
     
     Attributes
     ----------
-    metadata :: (Metadata): Metadata for the plan.
     plan :: (Dict[str, object]): Generated plan for the orchestrator to follow.
     """
 
-    def __init__(self, metadata: Metadata):
-        self.metadata = metadata
-        self.plan = self._generate_plan()
+    def __init__(self, metadata: ):
+        self.plan = self._generate_plan(metadata)
 
     def _generate_plan(self) -> Dict[str, object]:
         """Generates a plan for the model to follow."""

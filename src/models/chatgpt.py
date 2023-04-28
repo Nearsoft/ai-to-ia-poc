@@ -1,16 +1,18 @@
 """Instantiation of the ChatGPT model."""
 import os
-import requests
 from enum import Enum
+
+import requests
+
 from src.models.abstract_model import AbstractModel
 from src.models.gpt_tools import prompt_metadata
 
-class gpt_tools(Enum):
-    """Enum for the roles of the model."""
-    # PLANNER = prompt planner
-    # knowledge_retrieval = "Knowledge Retrieval"
-    # query_generator = "Query Generator"
-    # solution_generator = "Solution Generator"
+class GPTTools(Enum):
+    """Enum for model's roles."""
+    # PLANNER = prompt_prompt planner
+    # KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
+    # QUERY_GENERATOR = prompt_query_generator
+    # SOLUTION_GENERATOR = prompt_solution_enerator
     METADATA = prompt_metadata
 
 class ChatGPT(AbstractModel):
@@ -23,7 +25,7 @@ class ChatGPT(AbstractModel):
     model_id :: (str): The model id.
     name :: (str): The name of the model.
     platform :: (str): The platform the model is on.
-    reqUrl :: (str): The request url for the model.
+    completions_url :: (str): The request url for the model.
     headers :: (Dict[str, str]): The headers for the request.
 
     Methods
@@ -34,18 +36,18 @@ class ChatGPT(AbstractModel):
         Parses the result from the model.
     """
 
+    completions_url = "https://api.openai.com/v1/chat/completions"
     model_id = "chat_completions"
     name = "ChatGPT"
     platform = "openai"
-    tool = gpt_tools.METADATA
+    result = None
+    tool = None
 
-    def __init__(self, tool: gpt_tools):
-        self.completions_url = "https://api.openai.com/v1/chat/completions"
+    def __init__(self, tool: GPTTools):
         self.headers = {
             "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY"),
             "Content-Type": "application/json",
         }
-        self.result = None
         self.tool = tool
         self.base_prompt = self.tool.value.prompt
 

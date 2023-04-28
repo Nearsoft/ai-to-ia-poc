@@ -31,6 +31,8 @@ class AbstractModel(ABC):
             and callable(subclass.name)
             and hasattr(subclass, "platform")
             and callable(subclass.platform)
+            and hasattr(subclass, "result")
+            and callable(subclass.result)
             and hasattr(subclass, "tool")
             and callable(subclass.tool)
             and hasattr(subclass, "execute")
