@@ -1,7 +1,17 @@
 """Instantiation of the ChatGPT model."""
 import os
 import requests
+from enum import Enum
 from src.models.abstract_model import AbstractModel
+from src.models.gpt_tools import prompt_metadata
+
+class gpt_tools(Enum):
+    """Enum for the roles of the model."""
+    # PLANNER = prompt planner
+    # knowledge_retrieval = "Knowledge Retrieval"
+    # query_generator = "Query Generator"
+    # solution_generator = "Solution Generator"
+    METADATA = prompt_metadata
 
 class ChatGPT(AbstractModel):
     """
@@ -27,14 +37,17 @@ class ChatGPT(AbstractModel):
     model_id = "chat_completions"
     name = "ChatGPT"
     platform = "openai"
+    tool = gpt_tools.METADATA
 
-    def __init__(self):
+    def __init__(self, tool: gpt_tools):
         self.completions_url = "https://api.openai.com/v1/chat/completions"
         self.headers = {
             "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY"),
             "Content-Type": "application/json",
         }
         self.result = None
+        self.tool = tool
+        self.base_prompt = self.tool.value.prompt
 
     def execute(self, prompt, result=None):
         """
@@ -45,10 +58,12 @@ class ChatGPT(AbstractModel):
         prompt :: (str): The prompt to execute the model with.
         result :: (Dict[str, object]): The result from the previous model's execution.
         """
+
         data = {
-            "model": "gpt-3.5-turbo",
-            "messages": [{"content": prompt, "role": "user"}],
+            "model": "gpt-4",
+            "messages": [{"content": self.base_prompt+ "\n" + prompt, "role": "user"}],
         }
+
         response = requests.post(self.completions_url, json=data, headers=self.headers, timeout=15)
         if response.status_code == 200:
             response_json = response.json()
@@ -56,7 +71,6 @@ class ChatGPT(AbstractModel):
 
         
         print(f"Response:\n HTTP status code: {response.status_code}\n Response text: {response.text}")
-
         response.raise_for_status()
 
     def parse(self):

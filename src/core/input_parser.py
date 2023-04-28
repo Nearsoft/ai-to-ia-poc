@@ -2,7 +2,7 @@
 
 import json
 from src.core.metadata import Metadata
-from src.models.chatgpt import ChatGPT
+from src.models.chatgpt import ChatGPT, gpt_tools
 
 class Parser:
     """
@@ -15,9 +15,9 @@ class Parser:
         """
         Generates metadata based upon the user's input, by asking ChatGPT to parse it.
         """
-        gpt4 = ChatGPT()
+        gpt4 = ChatGPT(gpt_tools.METADATA)
         gpt4.execute(self.prompt)
         generated_metadata = gpt4.parse()
-        params = json.loads("{" + generated_metadata.split("{")[1])
-        
+
+        params = json.loads(generated_metadata)['Metadata']
         return Metadata(**params)

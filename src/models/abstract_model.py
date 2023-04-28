@@ -31,6 +31,8 @@ class AbstractModel(ABC):
             and callable(subclass.name)
             and hasattr(subclass, "platform")
             and callable(subclass.platform)
+            and hasattr(subclass, "tool")
+            and callable(subclass.tool)
             and hasattr(subclass, "execute")
             and callable(subclass.execute)
             and hasattr(subclass, "parse")
@@ -54,6 +56,12 @@ class AbstractModel(ABC):
     @abstractmethod
     def platform(self):
         """str: Origin platform for the model."""
+        raise NotImplementedError
+    
+    @property
+    @abstractmethod
+    def tool(self):
+        """str: Role that the model should assume."""
         raise NotImplementedError
 
     @abstractmethod
