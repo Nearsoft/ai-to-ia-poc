@@ -4,7 +4,7 @@ PlanGenerator module. Does plan generation for the `Orchestrator`
 """
 
 from typing import Dict
-from metadata import Metadata
+from src.core.metadata import Metadata
 
 class PlanGenerator:
     """

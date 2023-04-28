@@ -2,11 +2,10 @@
 Abstract class for models. All models must inherit from this class.
 """
 
-import abc
+from abc import ABC, abstractmethod
 from typing import Dict
 
-
-class AbstractModel(metaclass=abc.ABCMeta):
+class AbstractModel(ABC):
     """
     Abstract class for models with a minimal set of attributes and methods that
     the `Orchestrator` (`src/core/orchestrator.py`) will expect to be available.
@@ -40,36 +39,35 @@ class AbstractModel(metaclass=abc.ABCMeta):
         )
 
     @property
-    @abc.abstractmethod
+    @abstractmethod
     def model_id(self):
         """str: Unique, platform dependent identifier for the model."""
         raise NotImplementedError
 
     @property
-    @abc.abstractmethod
+    @abstractmethod
     def name(self):
         """str: Human readable identifier for the model."""
         raise NotImplementedError
 
     @property
-    @abc.abstractmethod
+    @abstractmethod
     def platform(self):
         """str: Origin platform for the model."""
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def execute(self, prompt: str, result: Dict[str, object]):
         """
         Execute the model. Model dependent.
 
         Parameters
         ----------
-        TODO: Change result type.
         result :: (Dict[str, object]): Result from the previous model's execution.
         """
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def parse(self) -> Dict[str, object]:
         """
         Parse the result of the model execution and return a dictionary with
