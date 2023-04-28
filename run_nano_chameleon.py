@@ -17,3 +17,4 @@ if __name__ == "__main__":
 
     plan = PlanGenerator(PROMPT).plan
     orchestrator = Orchestrator(plan)
+    print(orchestrator.execute_plan())

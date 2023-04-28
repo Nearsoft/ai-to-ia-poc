@@ -85,12 +85,12 @@ class ChatGPT(AbstractModel):
 
     def parse(self):
         """Parses the result from the model."""
+        content = self.result["choices"][0]["message"]["content"]
+
         if self.tool == GPTTools.METADATA:
-            content = self.result["choices"][0]["message"]["content"]
             return json.loads(content)["Metadata"]
 
         if self.tool == GPTTools.PLANNER:
-            content = self.result["choices"][0]["message"]["content"]
             return json.loads(content)["Plan"]
 
         return self.result
