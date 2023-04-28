@@ -392,11 +392,11 @@
         },
         "openai": {
             "hashes": [
-                "sha256:3b82c867d531e1fd2003d9de2131e1c4bfd4c70b1a3149e0543a555b30807b70",
-                "sha256:9f9d27d26e62c6068f516c0729449954b5ef6994be1a6cbfe7dbefbc84423a04"
+                "sha256:5b2121d8c0a4350626096fa482306d12e246a83b992530d54fd474f309f2882c",
+                "sha256:75778ca05759c77dde704985ee16976ba58804212f10e61f44356e68ffb8390e"
             ],
             "index": "pypi",
-            "version": "==0.27.4"
+            "version": "==0.27.5"
         },
         "python-dotenv": {
             "hashes": [

@@ -3,7 +3,7 @@ Run the NanoChameleon demo.
 """
 import os
 from dotenv import load_dotenv
-from src.core.input_parser import Parser
+from src.core.plan_generator import PlanGenerator
 from src.core.orchestrator import Orchestrator
 from src.demos.prompt_metadata import get_prompt
 
@@ -16,6 +16,6 @@ if __name__ == "__main__":
  
     #Create Metadata object
     prompt_from_file = get_prompt(question, options, metadata)
-    metadata_object = Parser(prompt_from_file).get_metadata()
+    metadata_object = PlanGenerator(metadata=None).get_metadata(prompt_from_file)
 
     orchestrator = Orchestrator(metadata_object)
