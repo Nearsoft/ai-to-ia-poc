@@ -9,14 +9,12 @@ from src.core.orchestrator import Orchestrator
 load_dotenv()
 
 if __name__ == "__main__":
-    prompt = {
-        "question": (
-            "Is the following statement about our solar system true or false?"
-            " Jupiter's volume is more than ten times as large as Saturn's volume."
-        ),
-        "options": "(A) True (B) False"
-    }
+    PROMPT = (
+        "Question: What is Jupiter's volume in cubic kilometers?\n"
+        "Options: (A) 1,431,281,810,739,360 cubic kilometers"
+        "  (B) 2,039,471,207,872,154 cubic kilometers"
+    )
 
     # Create Metadata object
-    metadata_object = Metadata(prompt_metadata.prompt).get_metadata(QUESTION, OPTIONS)
-    orchestrator = Orchestrator(metadata_object)
+    metadata = Metadata.get_metadata(PROMPT)
+    orchestrator = Orchestrator(metadata)
