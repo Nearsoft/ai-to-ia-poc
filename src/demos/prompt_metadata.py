@@ -7,7 +7,7 @@ def generate_prompt(question, options, metadata):
         Question: Which property a computer and a celphone have in common?
 
         Options: (A) Size (B) Internet Access
-        "Metadata" {metadata}
+        "Metadata" {"input_type": "text", "answer_type": "multiple_choice", "domain": "technology", "skill": "Compare", "difficulty": "1"}
         # The options for input_type are: text, number, image, audio, video, math, code, and select.
         # The options for answer_type are: multiple_choice, boolean, image, open_answer, and number.
         # The options for skill: Compare, Describe, Explain, Identify, Predict, and Summarize.
