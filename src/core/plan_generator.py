@@ -5,6 +5,8 @@ PlanGenerator module. Does plan generation for the `Orchestrator`
 
 from typing import Dict
 from src.core.metadata import Metadata
+import json
+from src.models.chatgpt import ChatGPT
 
 class PlanGenerator:
     """
@@ -20,6 +22,17 @@ class PlanGenerator:
         self.metadata = metadata
         self.plan = self._generate_plan()
 
+    def get_metadata(self, prompt: str) -> Metadata:
+        """
+        Generates metadata based upon the user's input, by asking ChatGPT to parse it.
+        """
+        gpt4 = ChatGPT()
+        gpt4.execute(prompt)
+        generated_metadata = gpt4.parse()
+        params = json.loads("{" + generated_metadata.split("{")[1])
+        
+        return Metadata(**params)
+    
     def _generate_plan(self) -> Dict[str, object]:
         """Generates a plan for the model to follow."""
         plan = {
