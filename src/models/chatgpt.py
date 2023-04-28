@@ -1,4 +1,5 @@
 """Instantiation of the ChatGPT model."""
+import json
 import os
 from enum import Enum
 
@@ -6,18 +7,22 @@ import requests
 
 from src.models.abstract_model import AbstractModel
 from src.models.gpt_tools import prompt_metadata
+from src.models.gpt_tools import prompt_planner
+
 
 class GPTTools(Enum):
     """Enum for model's roles."""
-    # PLANNER = prompt_prompt planner
+
+    METADATA = prompt_metadata
+    PLANNER = prompt_planner
     # KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
     # QUERY_GENERATOR = prompt_query_generator
     # SOLUTION_GENERATOR = prompt_solution_enerator
-    METADATA = prompt_metadata
+
 
 class ChatGPT(AbstractModel):
     """
-    Instantiantion of the ChatGPT model. Connects to the OpenAI API for chat 
+    Instantiantion of the ChatGPT model. Connects to the OpenAI API for chat
     completion.
 
     Attributes
@@ -49,7 +54,7 @@ class ChatGPT(AbstractModel):
             "Content-Type": "application/json",
         }
         self.tool = tool
-        self.base_prompt = self.tool.value.prompt
+        self.base_prompt = self.tool.value.PROMPT
 
     def execute(self, prompt, result=None):
         """
@@ -63,18 +68,29 @@ class ChatGPT(AbstractModel):
 
         data = {
             "model": "gpt-4",
-            "messages": [{"content": self.base_prompt+ "\n" + prompt, "role": "user"}],
+            "messages": [{"content": self.base_prompt + "\n" + prompt, "role": "user"}],
         }
 
-        response = requests.post(self.completions_url, json=data, headers=self.headers, timeout=15)
+        response = requests.post(
+            self.completions_url, json=data, headers=self.headers, timeout=15
+        )
         if response.status_code == 200:
             response_json = response.json()
-            self.result = response_json["choices"][0]["message"]["content"].strip()
+            self.result = response_json
 
-        
-        print(f"Response:\n HTTP status code: {response.status_code}\n Response text: {response.text}")
+        print(
+            f"\nResponse:\n HTTP status code: {response.status_code}\n Response text: {response.text}"
+        )
         response.raise_for_status()
 
     def parse(self):
         """Parses the result from the model."""
+        if self.tool == GPTTools.METADATA:
+            content = self.result["choices"][0]["message"]["content"]
+            return json.loads(content)["Metadata"]
+
+        if self.tool == GPTTools.PLANNER:
+            content = self.result["choices"][0]["message"]["content"]
+            return json.loads(content)["Plan"]
+
         return self.result

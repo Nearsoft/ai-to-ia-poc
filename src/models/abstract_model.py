@@ -5,6 +5,7 @@ Abstract class for models. All models must inherit from this class.
 from abc import ABC, abstractmethod
 from typing import Dict
 
+
 class AbstractModel(ABC):
     """
     Abstract class for models with a minimal set of attributes and methods that
@@ -59,7 +60,7 @@ class AbstractModel(ABC):
     def platform(self):
         """str: Origin platform for the model."""
         raise NotImplementedError
-    
+
     @property
     @abstractmethod
     def tool(self):

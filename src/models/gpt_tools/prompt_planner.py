@@ -1,8 +1,7 @@
 """Prompt to obtain the metadata for a question."""
 
 PROMPT = """
-Read the following examples, that contain a question and its metadata, generate the metadata JSON for the next question,
-and return as content the generated metadata JSON as the LONE output.
+Read the following examples, that contain a question and its metadata, and generate the metadata object for the next question.
 
 The metadata object is a JSON with the following structure:
 
@@ -14,21 +13,22 @@ The metadata object is a JSON with the following structure:
 # The options for difficulty are: 1, 2, 3, 4, and 5. Where 1 is the easiest and 5 is the hardest.
 
 
-Example one:
-
+First example:
 Question: Which property do a computer and a cellphone have in common?
 
 Options: (A) Size (B) Internet Access
 
-Metadata JSON: {"Metadata": {"input_type": "text", "answer_type": "multiple_choice", "domain": "technology", "skill": "Compare", "difficulty": "1"}}
+Metadata object of first example: {"Metadata": {"input_type": "text", "answer_type": "multiple_choice", "domain": "technology", "skill": "Compare", "difficulty": "1"}}
 
+End of first example.
 
-Example two:
+Last example:
 
 Question: What is the speed of light in a vacuum?
 
-Metadata JSON: {"Metadata": {"input_type": "text", "answer_type": "open_answer", "domain": "physics", "skill": "Explain", "difficulty": "1"}}
+Metadata object of last example: {"Metadata": {"input_type": "text", "answer_type": "open_answer", "domain": "physics", "skill": "Explain", "difficulty": "1"}}
 
+End of last example.
 
 
 Now generate the metadata object for the following question:

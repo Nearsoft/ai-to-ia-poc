@@ -3,7 +3,7 @@ Run the NanoChameleon demo.
 """
 
 from dotenv import load_dotenv
-from src.core.metadata import Metadata
+from src.core.plan_generator import PlanGenerator
 from src.core.orchestrator import Orchestrator
 
 load_dotenv()
@@ -15,6 +15,5 @@ if __name__ == "__main__":
         "  (B) 2,039,471,207,872,154 cubic kilometers"
     )
 
-    # Create Metadata object
-    metadata = Metadata.get_metadata(PROMPT)
-    orchestrator = Orchestrator(metadata)
+    plan = PlanGenerator(PROMPT).plan
+    orchestrator = Orchestrator(plan)
