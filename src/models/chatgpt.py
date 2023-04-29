@@ -82,6 +82,7 @@ class ChatGPT(AbstractModel):
             response_json = response.json()
             self.result = response_json
 
+        #TODO: Consider removing this print statement.
         print(
             f"\nResponse:\n HTTP status code: {response.status_code}\n Response text: {response.text}"
         )
@@ -95,6 +96,6 @@ class ChatGPT(AbstractModel):
             return json.loads(content)["Metadata"]
 
         if self.tool == GPTTools.PLANNER:
-            return json.loads(content)["Plan"]
+            return content.split(": ")[1]
 
         return self.result
