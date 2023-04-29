@@ -93,7 +93,8 @@ class ChatGPT(AbstractModel):
 
         match self.tool:
             case GPTTools.KNOWLEDGE_RETRIEVAL:
-                return json.loads(content)["Answer"]
+                # List starts right after the first '-'character.
+                return content[content.find('-'):]
             case GPTTools.METADATA:
                 return json.loads(content)["Metadata"]
             case GPTTools.PLANNER:
