@@ -7,11 +7,11 @@ import requests
 
 from src.models.abstract_model import AbstractModel
 from src.models.gpt_tools import (
+    prompt_knowledge_retrieval,
     prompt_metadata,
-    prompt_planner
+    prompt_planner,
+    prompt_solution_generator
 )
-from src.models.gpt_tools import prompt_knowledge_retrieval
-from src.models.gpt_tools import prompt_solution_generator
 
 
 class GPTTools(Enum):
@@ -20,8 +20,7 @@ class GPTTools(Enum):
     METADATA = prompt_metadata
     PLANNER = prompt_planner
     KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
-    # QUERY_GENERATOR = prompt_query_generator
-    SOLUTION_GENERATOR = prompt_solution_enerator
+    SOLUTION_GENERATOR = prompt_solution_generator
 
 
 class ChatGPT(AbstractModel):
@@ -91,10 +90,14 @@ class ChatGPT(AbstractModel):
         """Parses the result from the model."""
         content = self.result["choices"][0]["message"]["content"]
 
-        if self.tool == GPTTools.METADATA:
-            return json.loads(content)["Metadata"]
-
-        if self.tool == GPTTools.PLANNER:
-            return json.loads(content)["Plan"]
-
-        return self.result
+        match self.tool:
+            case GPTTools.KNOWLEDGE_RETRIEVAL:
+                return json.loads(content)["Answer"]
+            case GPTTools.METADATA:
+                return json.loads(content)["Metadata"]
+            case GPTTools.PLANNER:
+                return json.loads(content)["Plan"]
+            case GPTTools.SOLUTION_GENERATOR:
+                return json.loads(content)["Answer"]
+            case _:
+                return self.result
