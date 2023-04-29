@@ -6,8 +6,12 @@ from enum import Enum
 import requests
 
 from src.models.abstract_model import AbstractModel
-from src.models.gpt_tools import prompt_metadata
-from src.models.gpt_tools import prompt_planner
+from src.models.gpt_tools import (
+    prompt_metadata,
+    prompt_planner
+)
+from src.models.gpt_tools import prompt_knowledge_retrieval
+from src.models.gpt_tools import prompt_solution_generator
 
 
 class GPTTools(Enum):
@@ -15,9 +19,9 @@ class GPTTools(Enum):
 
     METADATA = prompt_metadata
     PLANNER = prompt_planner
-    # KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
+    KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
     # QUERY_GENERATOR = prompt_query_generator
-    # SOLUTION_GENERATOR = prompt_solution_enerator
+    SOLUTION_GENERATOR = prompt_solution_enerator
 
 
 class ChatGPT(AbstractModel):
