@@ -3,6 +3,7 @@ of modules that can be executed sequentially can solve the question. Return ONLY
 ["Image_Captioner", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
 
 The modules are defined as follows:
+
 - Query_Generator: This module generates a search engine query for the given question. Normally,
 we consider using "Query_Generator" when the question involves domain-specific knowledge.
 - Bing_Search: This module searches the web for relevant information to the question. Normally,
