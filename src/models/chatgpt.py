@@ -21,7 +21,7 @@ class GPTTools(Enum):
     PLANNER = prompt_planner
     KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
     # QUERY_GENERATOR = prompt_query_generator
-    SOLUTION_GENERATOR = prompt_solution_enerator
+    SOLUTION_GENERATOR = prompt_solution_generator
 
 
 class ChatGPT(AbstractModel):
@@ -97,5 +97,9 @@ class ChatGPT(AbstractModel):
 
         if self.tool == GPTTools.PLANNER:
             return content.split(": ")[1]
+        
+        if self.tool == GPTTools.KNOWLEDGE_RETRIEVAL:
+            # List starts right after first "-" character
+            return content[content.find('-'):]
 
         return self.result
