@@ -10,7 +10,7 @@ from src.models.gpt_tools import (
     prompt_knowledge_retrieval,
     prompt_metadata,
     prompt_planner,
-    prompt_solution_generator
+    prompt_solution_generator,
 )
 
 
@@ -81,7 +81,7 @@ class ChatGPT(AbstractModel):
             response_json = response.json()
             self.result = response_json
 
-        #TODO: Consider removing this print statement.
+        # TODO: Consider removing this print statement.
         print(
             f"\nResponse:\n HTTP status code: {response.status_code}\n Response text: {response.text}"
         )
@@ -94,7 +94,7 @@ class ChatGPT(AbstractModel):
         match self.tool:
             case GPTTools.KNOWLEDGE_RETRIEVAL:
                 # List starts right after the first '-'character.
-                return content[content.find('-'):]
+                return content[content.find("-") :]
             case GPTTools.METADATA:
                 return json.loads(content)["Metadata"]
             case GPTTools.PLANNER:
@@ -103,4 +103,3 @@ class ChatGPT(AbstractModel):
                 return json.loads(content)["Answer"]
             case _:
                 return self.result
-

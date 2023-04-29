@@ -32,6 +32,3 @@ Knowledge:
 Read the following question, generate the background knowledge as the context information that could be helpful for answering the question.
 Provide the response as a bulleted point list followed by the word Knowkedge.
 Question: """
-
-
- 
