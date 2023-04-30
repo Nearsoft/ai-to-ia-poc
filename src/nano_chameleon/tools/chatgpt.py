@@ -3,11 +3,11 @@
 import json
 import os
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Dict
 import requests
 
-from src.models.abstract_model import AbstractModel
-from src.models.gpt_tools import (
+from src.nano_chameleon.tools.abstract_model import AbstractModel
+from src.nano_chameleon.tools.gpt_prompts import (
     prompt_knowledge_retrieval,
     prompt_metadata,
     prompt_planner,
@@ -15,7 +15,15 @@ from src.models.gpt_tools import (
 )
 
 
-class GPTTools(Enum):
+COMPLETIONS_URL = "https://api.openai.com/v1/chat/completions"
+HEADERS = {
+    "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY"),
+    "Content-Type": "application/json",
+}
+MODEL_ID = "chat_completions"
+
+
+class GPTPrompts(Enum):
     """Enum for model's roles."""
 
     METADATA = prompt_metadata
@@ -42,88 +50,66 @@ class ChatGPT(AbstractModel):
 
     Methods
     -------
-    execute(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
+    run(prompt: str, payload: Dict[str, object]) -> : Executes
         the model with the given `prompt` and  previous (if nany) `result`.
 
     parse() -> Any: Parses the result from the model, and returns the parsed result.
     """
 
-    completions_url = "https://api.openai.com/v1/chat/completions"
-    model_id = "chat_completions"
-    name = "ChatGPT"
-    platform = "openai"
-    result = None
-    tool = None
-
-    def __init__(self, tool: GPTTools):
+    @staticmethod
+    def run(payload: Dict[str, object], tool: GPTPrompts) -> None:
         """
-        Constructor for the ChatGPT model.
+        Runs GPT-4 with the given payload and tool.
 
         Parameters
         ----------
-        tool :: (GPTTools): The tool to use for the model.
+        `payload`: (Dict[str, object]): The prompt to execute the model with.
+        `tool`: (GPTPrompts): Tool to use.
         """
-        self.headers = {
-            "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY"),
-            "Content-Type": "application/json",
-        }
-        self.tool = tool
-        self.base_prompt = self.tool.value.PROMPT
-
-    def execute(self, prompt, result: Optional[Dict[str, object]] = None):
-        """
-        Executes the model with the given prompt and result.
-
-        Parameters
-        ----------
-        prompt :: (str): The prompt to execute the model with.
-        result :: (Dict[str, object]): The result from the previous model's execution.
-        """
-        full_prompt = self.base_prompt + "\n" + prompt
         data = {
             "model": "gpt-4",
-            "messages": [{"content": full_prompt, "role": "user"}],
+            "messages": [{"content": tool.value.assemble_prompt(payload), "role": "user"}],
         }
 
-        response = requests.post(
-            self.completions_url, json=data, headers=self.headers, timeout=15
-        )
+        response = requests.post(COMPLETIONS_URL, json=data, headers=HEADERS, timeout=15)
         if response.status_code == 200:
             response_json = response.json()
-            self.result = response_json
+            result = response_json
+
+            return ChatGPT.parse(result, tool)
 
         print(
             f"\nResponse:\n HTTP status code: {response.status_code}\n Response: {response.json()}"
         )
         response.raise_for_status()
 
-    def parse(self) -> Any:
+    def parse(self, result: str) -> Dict[str, object]:
         """Parses the result from the model."""
-        content = self.result["choices"][0]["message"]["content"]
+        content = result["choices"][0]["message"]["content"]
 
         match self.tool:
-            case GPTTools.KNOWLEDGE_RETRIEVAL:
+            case GPTPrompts.KNOWLEDGE_RETRIEVAL:
                 # List starts right after the first '-'character.
                 return content[content.find("-") :]
-            case GPTTools.METADATA:
+            case GPTPrompts.METADATA:
                 return json.loads(content)["Metadata"]
-            case GPTTools.PLANNER:
+            case GPTPrompts.PLANNER:
                 return [
                     ChatGPT._map_module_to_tool(mn)
                     for mn in json.loads(content)["module_sequence"]
                 ]
-            case GPTTools.SOLUTION_GENERATOR:
+            case GPTPrompts.SOLUTION_GENERATOR:
                 return json.loads(content)["Answer"]
             case _:
-                return self.result
+                return result
 
     @staticmethod
-    def _map_module_to_tool(module_name: str) -> GPTTools:
+    def _map_module_to_tool(module_name: str) -> GPTPrompts:
         """Maps a module to its corresponding tool."""
         match module_name:
             case "Knowledge_Retrieval":
-                return GPTTools.KNOWLEDGE_RETRIEVAL
+                return GPTPrompts.KNOWLEDGE_RETRIEVAL
             case "Solution_Generator":
-                return GPTTools.SOLUTION_GENERATOR
+                return GPTPrompts.SOLUTION_GENERATOR
             case _:
-                return GPTTools.UNINPLEMENTED
+                return GPTPrompts.UNINPLEMENTED

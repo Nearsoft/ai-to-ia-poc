@@ -13,15 +13,12 @@ class AbstractModel(ABC):
 
     Attributes
     ----------
-    model_id :: (str): The model id.
     name :: (str): The name of the model.
     platform :: (str): The platform the model is on.
-    result :: (Dict[str, object): The result of procesing a prompt with the model.
-    tool :: (GPTTools): The tool to use for the model.
 
     Methods
     -------
-    execute(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
+    run(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
         the model with the given `prompt` and  previous (if nany) `result`.
 
     parse() -> Dict[str, object]: Parses the result from the model, and returns the
@@ -31,28 +28,16 @@ class AbstractModel(ABC):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
-            hasattr(subclass, "model_id")
-            and callable(subclass.model_id)
-            and hasattr(subclass, "name")
+            hasattr(subclass, "name")
             and callable(subclass.name)
             and hasattr(subclass, "platform")
             and callable(subclass.platform)
-            and hasattr(subclass, "result")
-            and callable(subclass.result)
-            and hasattr(subclass, "tool")
-            and callable(subclass.tool)
-            and hasattr(subclass, "execute")
-            and callable(subclass.execute)
+            and hasattr(subclass, "run")
+            and callable(subclass.run)
             and hasattr(subclass, "parse")
             and callable(subclass.parse)
             or NotImplemented
         )
-
-    @property
-    @abstractmethod
-    def model_id(self):
-        """str: Unique, platform dependent identifier for the model."""
-        raise NotImplementedError
 
     @property
     @abstractmethod
@@ -66,32 +51,27 @@ class AbstractModel(ABC):
         """str: Origin platform for the model."""
         raise NotImplementedError
 
-    @property
+    @staticmethod
     @abstractmethod
-    def tool(self):
-        """str: Role that the model should assume."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def execute(self, prompt: str, result: Optional[Dict[str, object]] = None):
+    def run(payload: Dict[str, object] = None):
         """
-        Execute the model. Model dependent.
+        Run the model. Model dependent.
 
         Parameters
         ----------
-        result :: (Dict[str, object]): Result from the previous model's execution.
+        payload :: (Dict[str, object]): Payload to run the model with.
         """
         raise NotImplementedError
 
+    @staticmethod
     @abstractmethod
-    def parse(self) -> Dict[str, object]:
+    def parse(result) -> Dict[str, object]:
         """
-        Parse the result of the model execution and return a dictionary with
-        the following structu‚re:
+        Parse the result of the models run and return the parsed result.
+        Model dependent.
 
-        {
-            "output" (str): The output of the model execution.
-            "metadata" (Dict): The metadata for the execution. Model dependent.
-        }
+        Parameters
+        ----------
+        result :: (Dict[str, object]): Payload to run the model with.
         """
         raise NotImplementedError
