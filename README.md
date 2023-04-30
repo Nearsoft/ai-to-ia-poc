@@ -6,7 +6,7 @@ This project is part of Encora's Generative AI Initiative. The initiative is mea
 
 ## Objective
 
-This PoC will try to replicate the effects on productivity reported by GitHub and Microsot Research as presented in ["Productivity Assessment of Neural Code Completion"](https://arxiv.org/abs/2205.06537) by Albert Ziegler, Eirini Kalliamvakou, Shawn Simister, Ganesh Sittampalam, Alice Li, Andrew Rice, Devon Rifkin and Edward Aftandilian, a less technical overview of which can be read here: [Research: quantifying GitHub Copilot’s impact on developer productivity and happiness](https://github.blog/2022-09-07-research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/). Our objective is to verify an overall productivity improvement in the range of 35% to 40%.
+This PoC will try to replicate the effects on productivity reported by GitHub and Microsot Research as presented in ['Productivity Assessment of Neural Code Completion'](https://arxiv.org/abs/2205.06537) by Albert Ziegler, Eirini Kalliamvakou, Shawn Simister, Ganesh Sittampalam, Alice Li, Andrew Rice, Devon Rifkin and Edward Aftandilian, a less technical overview of which can be read here: [Research: quantifying GitHub Copilot’s impact on developer productivity and happiness](https://github.blog/2022-09-07-research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/). Our objective is to verify an overall productivity improvement in the range of 35% to 40%.
 
 ## Methodology
 

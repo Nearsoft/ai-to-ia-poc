@@ -9,7 +9,7 @@ from typing import Dict, Optional
 class AbstractModel(ABC):
     """
     Abstract class for models with a minimal set of attributes and methods that
-    the `Orchestrator` (`src/core/orchestrator.py`) will expect to be available.
+    the `Orchestrator` (`src.core.orchestrator`) will expect to be available.
 
     Attributes
     ----------
