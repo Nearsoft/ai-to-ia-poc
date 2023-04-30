@@ -1,11 +1,17 @@
 """Prompt Planner for GPT-4."""
 
 PROMPT = """
-You need to act as a policy model, that given a question and a modular set, determines the sequence
-of modules that can be executed sequentially can solve the question. Return ONLY "Plan", the list "Plan" follows this format:
+Act as a policy model, that given a question, its metadata and a set of modules,
+returns the sequence of modules that can be executed sequentially to solve the question
+in JSON format.
+
+Return as content the generated sequence of modules JSON as the LONE output.
+
+The sequence of modules is a JSON with the following structure:
+
 ["Image_Captioner", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
 
-The modules are defined as follows:
+The set of valid modules is the following:
 
 - Query_Generator: This module generates a search engine query for the given question. Normally,
 we consider using "Query_Generator" when the question involves domain-specific knowledge.
@@ -32,7 +38,8 @@ from "Query_Generator", "Bing_Search", "Image_Captioner", "Text_Detector", and "
 - Answer_Generator: This module extracts the final answer in a short form from the solution or
 execution result. This module normally is the last module in the prediction pipeline.
 
-Below are some examples that map the problem to the modules.
+
+Below are two examples that map a problem to the list of modules.
 
 Example 1:
 
@@ -41,7 +48,7 @@ Options: (A) Size (B) Internet Access
 
 Metadata JSON: {"Metadata": {"input_type": "text", "answer_type": "multiple_choice", "domain": "technology", "skill": "Compare", "difficulty": "1"}}
 
-Plan: ["Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
+["Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
 
 
 Example 2:
@@ -54,7 +61,12 @@ Each colored ball represents one gas particle. Both samples have the same number
 
 Options: (A) neither; the samples have the same temperature (B) sample A (C) sample B
 
-"Metadata": {"input_type": "text", "answer_type": "multiple_choice", "domain": "natural science", "skill": "Identify", "difficulty": "1"}
+Metadata JSON: {"input_type": "text", "answer_type": "multiple_choice", "domain": "natural science", "skill": "Identify", "difficulty": "1"}
 
-Plan: ["Text_Detector", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
+["Text_Detector", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
+
+
+Now, please generate the plan for the following question and metadata:
+
+
 """

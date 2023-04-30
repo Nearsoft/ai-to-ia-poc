@@ -79,10 +79,10 @@ class ChatGPT(AbstractModel):
         prompt :: (str): The prompt to execute the model with.
         result :: (Dict[str, object]): The result from the previous model's execution.
         """
-
+        full_prompt = self.base_prompt + "\n" + prompt
         data = {
             "model": "gpt-4",
-            "messages": [{"content": self.base_prompt + "\n" + prompt, "role": "user"}],
+            "messages": [{"content": full_prompt, "role": "user"}],
         }
 
         response = requests.post(
@@ -92,9 +92,8 @@ class ChatGPT(AbstractModel):
             response_json = response.json()
             self.result = response_json
 
-        # TODO (team): Turn this into a logging statement.
         print(
-            f"\nResponse:\n HTTP status code: {response.status_code}\n Response text: {response.text}"
+            f"\nResponse:\n HTTP status code: {response.status_code}\n Response: {response.json()}"
         )
         response.raise_for_status()
 
@@ -109,7 +108,7 @@ class ChatGPT(AbstractModel):
             case GPTTools.METADATA:
                 return json.loads(content)["Metadata"]
             case GPTTools.PLANNER:
-                return content.split(": ")[1]
+                return json.loads(content)
             case GPTTools.SOLUTION_GENERATOR:
                 return json.loads(content)["Answer"]
             case _:

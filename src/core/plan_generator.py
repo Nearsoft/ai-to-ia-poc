@@ -31,12 +31,15 @@ class PlanGenerator:
         prompt :: (str): The user's input.
         """
         metadata = PlanGenerator._process_prompt(prompt, GPTTools.METADATA)
-        model_sequence = PlanGenerator._process_prompt(prompt, GPTTools.PLANNER)
+        optional_responses = PlanGenerator._get_options_from_prompt(prompt)
+        model_sequence = PlanGenerator._process_prompt(
+            prompt + f"\nMetadata: {metadata}\n", GPTTools.PLANNER
+        )
 
         return {
             "original_question": prompt,
             "image": None,  # Image handling will be added in a future release.
-            "optional_responses": [],
+            "optional_responses": optional_responses,
             "metadata": metadata,
             "model_sequence": model_sequence,
         }

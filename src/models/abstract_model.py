@@ -73,7 +73,7 @@ class AbstractModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute(self, prompt: str, result: Optional(Dict[str, object]) = None):
+    def execute(self, prompt: str, result: Optional[Dict[str, object]] = None):
         """
         Execute the model. Model dependent.
 
