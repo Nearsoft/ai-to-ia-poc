@@ -1,6 +1,6 @@
 """
 PlanGenerator module. Does plan generation for the `Orchestrator`
-(`src/core/orchestrator.py`).
+(`src.core.orchestrator`).
 """
 
 import re
@@ -33,7 +33,7 @@ class PlanGenerator:
         metadata = PlanGenerator._process_prompt(prompt, GPTTools.METADATA)
         optional_responses = PlanGenerator._get_options_from_prompt(prompt)
         model_sequence = PlanGenerator._process_prompt(
-            prompt + f"\nMetadata: {metadata}\n", GPTTools.PLANNER
+            f"{prompt}\n Metadata: {metadata}\n", GPTTools.PLANNER
         )
 
         return {

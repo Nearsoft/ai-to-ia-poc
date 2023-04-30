@@ -9,7 +9,7 @@ Return as content the generated sequence of modules JSON as the LONE output.
 
 The sequence of modules is a JSON with the following structure:
 
-["Image_Captioner", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
+{"module_sequence": ["Image_Captioner", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
 
 The set of valid modules is the following:
 
@@ -48,7 +48,7 @@ Options: (A) Size (B) Internet Access
 
 Metadata JSON: {"Metadata": {"input_type": "text", "answer_type": "multiple_choice", "domain": "technology", "skill": "Compare", "difficulty": "1"}}
 
-["Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
+{"module_sequence": ["Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]}
 
 
 Example 2:
@@ -63,7 +63,7 @@ Options: (A) neither; the samples have the same temperature (B) sample A (C) sam
 
 Metadata JSON: {"input_type": "text", "answer_type": "multiple_choice", "domain": "natural science", "skill": "Identify", "difficulty": "1"}
 
-["Text_Detector", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]
+{"module_sequence": ["Text_Detector", "Knowledge_Retrieval", "Solution_Generator", "Answer_Generator"]}
 
 
 Now, please generate the plan for the following question and metadata:

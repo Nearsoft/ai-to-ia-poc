@@ -3,7 +3,7 @@
 import json
 import os
 from enum import Enum
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 import requests
 
 from src.models.abstract_model import AbstractModel
@@ -22,6 +22,7 @@ class GPTTools(Enum):
     PLANNER = prompt_planner
     KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
     SOLUTION_GENERATOR = prompt_solution_generator
+    UNINPLEMENTED = None
 
 
 class ChatGPT(AbstractModel):
@@ -36,7 +37,7 @@ class ChatGPT(AbstractModel):
     model_id :: (str): The model id.
     name :: (str): The name of the model.
     platform :: (str): The platform the model is on.
-    result :: (Dict[str, object): The result of procesing a prompt with the model.
+    result :: (Dict[str, object]): The result of procesing a prompt with the model.
     tool :: (GPTTools): The tool to use for the model.
 
     Methods
@@ -44,8 +45,7 @@ class ChatGPT(AbstractModel):
     execute(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
         the model with the given `prompt` and  previous (if nany) `result`.
 
-    parse() -> Dict[str, object]: Parses the result from the model, and returns the
-        parsed result.
+    parse() -> Any: Parses the result from the model, and returns the parsed result.
     """
 
     completions_url = "https://api.openai.com/v1/chat/completions"
@@ -97,7 +97,7 @@ class ChatGPT(AbstractModel):
         )
         response.raise_for_status()
 
-    def parse(self):
+    def parse(self) -> Any:
         """Parses the result from the model."""
         content = self.result["choices"][0]["message"]["content"]
 
@@ -108,8 +108,22 @@ class ChatGPT(AbstractModel):
             case GPTTools.METADATA:
                 return json.loads(content)["Metadata"]
             case GPTTools.PLANNER:
-                return json.loads(content)
+                return [
+                    ChatGPT._map_module_to_tool(mn)
+                    for mn in json.loads(content)["module_sequence"]
+                ]
             case GPTTools.SOLUTION_GENERATOR:
                 return json.loads(content)["Answer"]
             case _:
                 return self.result
+
+    @staticmethod
+    def _map_module_to_tool(module_name: str) -> GPTTools:
+        """Maps a module to its corresponding tool."""
+        match module_name:
+            case "Knowledge_Retrieval":
+                return GPTTools.KNOWLEDGE_RETRIEVAL
+            case "Solution_Generator":
+                return GPTTools.SOLUTION_GENERATOR
+            case _:
+                return GPTTools.UNINPLEMENTED
