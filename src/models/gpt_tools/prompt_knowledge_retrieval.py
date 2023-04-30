@@ -1,4 +1,4 @@
-"""???"""
+"""Prompt for the knowledge retrieval task."""
 
 PROMPT = """
 Read the following question, and generate the background knowledge as the context information

@@ -1,4 +1,4 @@
-"""Prompt to obtain the metadata for a question."""
+"""Prompt to obtain the solution to a question."""
 
 PROMPT = """
 

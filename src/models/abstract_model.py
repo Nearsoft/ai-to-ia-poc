@@ -3,7 +3,7 @@ Abstract class for models. All models must inherit from this class.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, Optional
 
 
 class AbstractModel(ABC):
@@ -13,14 +13,19 @@ class AbstractModel(ABC):
 
     Attributes
     ----------
-    id :: (str): Unique, platfomr dependent identifier for the model.
-    name :: (str): Human readable identifier for the model.
-    platform :: (str): Origin platform for the model.
+    model_id :: (str): The model id.
+    name :: (str): The name of the model.
+    platform :: (str): The platform the model is on.
+    result :: (Dict[str, object): The result of procesing a prompt with the model.
+    tool :: (GPTTools): The tool to use for the model.
 
     Methods
     -------
-    execute :: (None): Execute the model. Model dependent.
-    parse :: (dict): Parse the results from model execution and return them.
+    execute(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
+        the model with the given `prompt` and  previous (if nany) `result`.
+
+    parse() -> Dict[str, object]: Parses the result from the model, and returns the
+        parsed result.
     """
 
     @classmethod
@@ -68,7 +73,7 @@ class AbstractModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute(self, prompt: str, result: Dict[str, object]):
+    def execute(self, prompt: str, result: Optional(Dict[str, object]) = None):
         """
         Execute the model. Model dependent.
 

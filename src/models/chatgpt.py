@@ -1,8 +1,9 @@
 """Instantiation of the ChatGPT model."""
+
 import json
 import os
 from enum import Enum
-
+from typing import Dict, Optional
 import requests
 
 from src.models.abstract_model import AbstractModel
@@ -30,18 +31,21 @@ class ChatGPT(AbstractModel):
 
     Attributes
     ----------
+    completions_url :: (str): The request url for the model.
+    headers :: (Dict[str, str]): The headers for the request.
     model_id :: (str): The model id.
     name :: (str): The name of the model.
     platform :: (str): The platform the model is on.
-    completions_url :: (str): The request url for the model.
-    headers :: (Dict[str, str]): The headers for the request.
+    result :: (Dict[str, object): The result of procesing a prompt with the model.
+    tool :: (GPTTools): The tool to use for the model.
 
     Methods
     -------
-    execute(prompt, result=None)
-        Executes the model with the given prompt and result.
-    parse(result)
-        Parses the result from the model.
+    execute(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
+        the model with the given `prompt` and  previous (if nany) `result`.
+
+    parse() -> Dict[str, object]: Parses the result from the model, and returns the
+        parsed result.
     """
 
     completions_url = "https://api.openai.com/v1/chat/completions"
@@ -52,6 +56,13 @@ class ChatGPT(AbstractModel):
     tool = None
 
     def __init__(self, tool: GPTTools):
+        """
+        Constructor for the ChatGPT model.
+
+        Parameters
+        ----------
+        tool :: (GPTTools): The tool to use for the model.
+        """
         self.headers = {
             "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY"),
             "Content-Type": "application/json",
@@ -59,7 +70,7 @@ class ChatGPT(AbstractModel):
         self.tool = tool
         self.base_prompt = self.tool.value.PROMPT
 
-    def execute(self, prompt, result=None):
+    def execute(self, prompt, result: Optional[Dict[str, object]] = None):
         """
         Executes the model with the given prompt and result.
 
@@ -81,7 +92,7 @@ class ChatGPT(AbstractModel):
             response_json = response.json()
             self.result = response_json
 
-        # TODO: Consider removing this print statement.
+        # TODO (team): Turn this into a logging statement.
         print(
             f"\nResponse:\n HTTP status code: {response.status_code}\n Response text: {response.text}"
         )
