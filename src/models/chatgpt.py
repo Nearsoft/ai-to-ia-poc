@@ -1,17 +1,18 @@
 """Instantiation of the ChatGPT model."""
+
 import json
 import os
 from enum import Enum
-
+from typing import Dict, Optional
 import requests
 
 from src.models.abstract_model import AbstractModel
 from src.models.gpt_tools import (
+    prompt_knowledge_retrieval,
     prompt_metadata,
-    prompt_planner
+    prompt_planner,
+    prompt_solution_generator,
 )
-from src.models.gpt_tools import prompt_knowledge_retrieval
-from src.models.gpt_tools import prompt_solution_generator
 
 
 class GPTTools(Enum):
@@ -20,7 +21,6 @@ class GPTTools(Enum):
     METADATA = prompt_metadata
     PLANNER = prompt_planner
     KNOWLEDGE_RETRIEVAL = prompt_knowledge_retrieval
-    # QUERY_GENERATOR = prompt_query_generator
     SOLUTION_GENERATOR = prompt_solution_generator
 
 
@@ -31,18 +31,21 @@ class ChatGPT(AbstractModel):
 
     Attributes
     ----------
+    completions_url :: (str): The request url for the model.
+    headers :: (Dict[str, str]): The headers for the request.
     model_id :: (str): The model id.
     name :: (str): The name of the model.
     platform :: (str): The platform the model is on.
-    completions_url :: (str): The request url for the model.
-    headers :: (Dict[str, str]): The headers for the request.
+    result :: (Dict[str, object): The result of procesing a prompt with the model.
+    tool :: (GPTTools): The tool to use for the model.
 
     Methods
     -------
-    execute(prompt, result=None)
-        Executes the model with the given prompt and result.
-    parse(result)
-        Parses the result from the model.
+    execute(prompt: str, result: Optional[Dict[str, object]]=None) -> None: Executes
+        the model with the given `prompt` and  previous (if nany) `result`.
+
+    parse() -> Dict[str, object]: Parses the result from the model, and returns the
+        parsed result.
     """
 
     completions_url = "https://api.openai.com/v1/chat/completions"
@@ -53,6 +56,13 @@ class ChatGPT(AbstractModel):
     tool = None
 
     def __init__(self, tool: GPTTools):
+        """
+        Constructor for the ChatGPT model.
+
+        Parameters
+        ----------
+        tool :: (GPTTools): The tool to use for the model.
+        """
         self.headers = {
             "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY"),
             "Content-Type": "application/json",
@@ -60,7 +70,7 @@ class ChatGPT(AbstractModel):
         self.tool = tool
         self.base_prompt = self.tool.value.PROMPT
 
-    def execute(self, prompt, result=None):
+    def execute(self, prompt, result: Optional[Dict[str, object]] = None):
         """
         Executes the model with the given prompt and result.
 
@@ -69,10 +79,10 @@ class ChatGPT(AbstractModel):
         prompt :: (str): The prompt to execute the model with.
         result :: (Dict[str, object]): The result from the previous model's execution.
         """
-
+        full_prompt = self.base_prompt + "\n" + prompt
         data = {
             "model": "gpt-4",
-            "messages": [{"content": self.base_prompt + "\n" + prompt, "role": "user"}],
+            "messages": [{"content": full_prompt, "role": "user"}],
         }
 
         response = requests.post(
@@ -82,9 +92,8 @@ class ChatGPT(AbstractModel):
             response_json = response.json()
             self.result = response_json
 
-        #TODO: Consider removing this print statement.
         print(
-            f"\nResponse:\n HTTP status code: {response.status_code}\n Response text: {response.text}"
+            f"\nResponse:\n HTTP status code: {response.status_code}\n Response: {response.json()}"
         )
         response.raise_for_status()
 
@@ -92,14 +101,15 @@ class ChatGPT(AbstractModel):
         """Parses the result from the model."""
         content = self.result["choices"][0]["message"]["content"]
 
-        if self.tool == GPTTools.METADATA:
-            return json.loads(content)["Metadata"]
-
-        if self.tool == GPTTools.PLANNER:
-            return content.split(": ")[1]
-        
-        if self.tool == GPTTools.KNOWLEDGE_RETRIEVAL:
-            # List starts right after first "-" character
-            return content[content.find('-'):]
-
-        return self.result
+        match self.tool:
+            case GPTTools.KNOWLEDGE_RETRIEVAL:
+                # List starts right after the first '-'character.
+                return content[content.find("-") :]
+            case GPTTools.METADATA:
+                return json.loads(content)["Metadata"]
+            case GPTTools.PLANNER:
+                return json.loads(content)
+            case GPTTools.SOLUTION_GENERATOR:
+                return json.loads(content)["Answer"]
+            case _:
+                return self.result

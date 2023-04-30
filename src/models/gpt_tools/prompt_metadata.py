@@ -33,4 +33,4 @@ Metadata JSON: {"Metadata": {"input_type": "text", "answer_type": "open_answer",
 
 Now generate the metadata object for the following question:
 
-Question: """
+"""

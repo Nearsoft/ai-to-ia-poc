@@ -15,6 +15,7 @@ if __name__ == "__main__":
         "  (B) 2,039,471,207,872,154 cubic kilometers"
     )
 
-    plan = PlanGenerator(PROMPT).plan
+    plan = PlanGenerator.generate_plan(PROMPT)
+    print(f"Plan: {plan}")
     orchestrator = Orchestrator(plan)
     print(orchestrator.execute_plan())
