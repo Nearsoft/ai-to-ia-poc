@@ -86,7 +86,7 @@ class ChatGPT(AbstractModel):
         }
 
         response = requests.post(
-            self.completions_url, json=data, headers=self.headers, timeout=15
+            self.completions_url, json=data, headers=self.headers, timeout=60
         )
         if response.status_code == 200:
             response_json = response.json()
@@ -113,7 +113,9 @@ class ChatGPT(AbstractModel):
                     for mn in json.loads(content)["module_sequence"]
                 ]
             case GPTTools.SOLUTION_GENERATOR:
-                return json.loads(content)["Answer"]
+                solution = content.split("Therefore, the answer is ")
+                self.result = f"The answer is: {solution[1]}"
+                return self.result
             case _:
                 return self.result
 
