@@ -83,11 +83,11 @@ class ChatGPT(AbstractModel):
         )
         response.raise_for_status()
 
-    def parse(self, result: str) -> Dict[str, object]:
+    def parse(self, result: str, tool) -> Dict[str, object]:
         """Parses the result from the model."""
         content = result["choices"][0]["message"]["content"]
 
-        match self.tool:
+        match tool:
             case GPTPrompts.KNOWLEDGE_RETRIEVAL:
                 # List starts right after the first '-'character.
                 return content[content.find("-") :]

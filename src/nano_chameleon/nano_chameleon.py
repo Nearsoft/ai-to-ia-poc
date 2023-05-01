@@ -97,9 +97,8 @@ class NanoChameleon:
             if tool != GPTPrompts.UNINPLEMENTED:
                 gpt4.run(tool, payload)
 
-                result = gpt4.parse()
+                gpt4.parse(payload)
 
-        return result
         for module in payload['module_sequence']:
             module.run(payload)
             payload = module.parse()
