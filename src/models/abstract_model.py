@@ -73,13 +73,13 @@ class AbstractModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute(self, payload: Dict[str, object]):
+    def execute(self, prompt: str):
         """
         Execute the model. Model dependent.
 
         Parameters
         ----------
-        payload :: (Dict[str, object]): Execution payload.
+        prompt :: str: Prompt to send to the Model. Model dependent.
         """
         raise NotImplementedError
 

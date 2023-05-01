@@ -68,9 +68,9 @@ class ChatGPT(AbstractModel):
             "Content-Type": "application/json",
         }
         self.tool = tool
-        self.base_prompt = self.tool.value.PROMPT
+        self.result = None
 
-    def execute(self, prompt, result: Optional[Dict[str, object]] = None):
+    def execute(self, prompt: str):
         """
         Executes the model with the given prompt and result.
 
@@ -79,7 +79,7 @@ class ChatGPT(AbstractModel):
         prompt :: (str): The prompt to execute the model with.
         result :: (Dict[str, object]): The result from the previous model's execution.
         """
-        full_prompt = self.base_prompt + "\n" + prompt
+        full_prompt = self.tool.value.PROMPT + "\n" + prompt
         data = {
             "model": "gpt-4",
             "messages": [{"content": full_prompt, "role": "user"}],
