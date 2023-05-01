@@ -42,7 +42,7 @@ class PlanGenerator:
             "optional_responses": f"{optional_responses}",
             "metadata": metadata,
             "model_sequence": model_sequence,
-            "retrieved_knowledge": ""
+            "retrieved_knowledge": "",
         }
 
     @staticmethod
