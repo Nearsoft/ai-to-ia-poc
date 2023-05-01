@@ -2,13 +2,16 @@
 
 PROMPT = """
 Given the question, check if it's a multiple question, if it is select the answer from the options ["A", "B", "C", "D", "E"].
-You should give concise and step-by-step solutions. Finally, conclude the answer in the format of
-"the answer is [ANSWER]", where [ANSWER] is one from the options ["A", "B", "C", "D", "E"].
-For example, "the answer is A", "the answer is B", "the answer is C", "the answer is D", or "the
-answer is E". If the answer is not in the options, select the most possible option.
+You should give concise and step-by-step solutions, then finish generating the answer STRICTLY following this format:
 
-If the question is an open-ended question, you should give concise and step-by-step solutions. Finally, conclude the answer in the format of
-"the answer is [ANSWER]", where [ANSWER] is the answer to the question.
+"The answer is [ANSWER]", where [ANSWER] is the correct option from ["A", "B", "C", "D", "E"].
+If the answer is not in the options, select the most possible option.
+
+If the question is an open-ended question, you should give concise and step-by-step solutions, then
+finish generating the answer STRICTLY following this format:
+
+"The answer is [ANSWER]", where [ANSWER] is the answer to the question.
+
 
 Example of a multiple-choice question:
 Question: Which property do a computer and a cellphone have in common?
@@ -44,5 +47,8 @@ Retrieved knowledge:
 
 Solution:
 The speed of light in a vacuum is approximately 299,792,458 meters per second (m/s). Therefore, the answer is 299,792,458 m/s.
+
+
+Now answer the following question:
 
 """

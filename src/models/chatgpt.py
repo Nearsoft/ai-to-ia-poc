@@ -3,7 +3,7 @@
 import json
 import os
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any
 import requests
 
 from src.models.abstract_model import AbstractModel
@@ -68,9 +68,9 @@ class ChatGPT(AbstractModel):
             "Content-Type": "application/json",
         }
         self.tool = tool
-        self.base_prompt = self.tool.value.PROMPT
+        self.result = None
 
-    def execute(self, prompt, result: Optional[Dict[str, object]] = None):
+    def execute(self, prompt: str):
         """
         Executes the model with the given prompt and result.
 
@@ -79,7 +79,7 @@ class ChatGPT(AbstractModel):
         prompt :: (str): The prompt to execute the model with.
         result :: (Dict[str, object]): The result from the previous model's execution.
         """
-        full_prompt = self.base_prompt + "\n" + prompt
+        full_prompt = self.tool.value.PROMPT + "\n" + prompt
         data = {
             "model": "gpt-4",
             "messages": [{"content": full_prompt, "role": "user"}],
@@ -113,7 +113,7 @@ class ChatGPT(AbstractModel):
                     for mn in json.loads(content)["module_sequence"]
                 ]
             case GPTTools.SOLUTION_GENERATOR:
-                solution = content.split("Therefore, the answer is ")
+                solution = content.split("The answer is ")
                 self.result = f"The answer is: {solution[1]}"
                 return self.result
             case _:

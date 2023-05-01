@@ -38,7 +38,7 @@ class Orchestrator:
     @staticmethod
     def _assemble_prompt(tool: GPTTools, plan: Dict[str, object]) -> str:
         """Assembles the prompt for the given tool."""
-        
+
         prompt = (
             f"{plan['original_question']} \n"
             f"Options: {plan['optional_responses']}\n"
