@@ -3,7 +3,7 @@
 import json
 import os
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any
 import requests
 
 from src.models.abstract_model import AbstractModel

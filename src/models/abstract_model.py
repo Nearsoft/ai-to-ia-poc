@@ -3,7 +3,7 @@ Abstract class for models. All models must inherit from this class.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Optional
+from typing import Dict
 
 
 class AbstractModel(ABC):
