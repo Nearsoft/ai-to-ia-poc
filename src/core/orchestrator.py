@@ -25,36 +25,25 @@ class Orchestrator:
     @staticmethod
     def execute_plan(plan: Dict[str, object]) -> str:
         """Executes the plan and returns the result."""
-        result = None
-
         for tool in plan["model_sequence"]:
             if tool != GPTTools.UNINPLEMENTED:
-                prompt = Orchestrator._assemble_prompt(tool, plan, result)
+                prompt = Orchestrator._assemble_prompt(tool, plan)
 
                 gpt4 = ChatGPT(tool)
                 gpt4.execute(prompt)
+                gpt4.parse()
 
-                result = gpt4.parse()
-
-        return result
+        return gpt4.result
 
     @staticmethod
-    def _assemble_prompt(
-        tool: GPTTools, plan: Dict[str, object], result: Dict[str, object]
-    ) -> str:
+    def _assemble_prompt(tool: GPTTools, plan: Dict[str, object]) -> str:
         """Assembles the prompt for the given tool."""
-        optional_responses = (
+        
+        prompt = (
+            f"{plan['original_question']} \n"
             f"Options: {plan['optional_responses']}\n"
-            if plan["optional_responses"]
-            else ""
+            f"Metadata: {plan['metadata']}\n"
+            f"Knowledge: {plan['retrieved_knowledge']}\n"
         )
-
-        if not result:
-            prompt = (
-                f"{plan['original_question']} \n {optional_responses}"
-                f"Metadata: {plan['metadata']}\n"
-            )
-        else:
-            prompt = result
 
         return f"{tool.value.PROMPT} \n + {prompt}"

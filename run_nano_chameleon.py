@@ -16,6 +16,5 @@ if __name__ == "__main__":
     )
 
     plan = PlanGenerator.generate_plan(PROMPT)
-    print(f"\nPlan: {plan}")
 
     print(f"\nResult: {Orchestrator.execute_plan(plan)}")

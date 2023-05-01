@@ -73,13 +73,13 @@ class AbstractModel(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute(self, prompt: str, result: Optional[Dict[str, object]] = None):
+    def execute(self, payload: Dict[str, object]):
         """
         Execute the model. Model dependent.
 
         Parameters
         ----------
-        result :: (Dict[str, object]): Result from the previous model's execution.
+        payload :: (Dict[str, object]): Execution payload.
         """
         raise NotImplementedError
 
@@ -87,7 +87,7 @@ class AbstractModel(ABC):
     def parse(self) -> Dict[str, object]:
         """
         Parse the result of the model execution and return a dictionary with
-        the following structu‚re:
+        the following structure:
 
         {
             "output" (str): The output of the model execution.

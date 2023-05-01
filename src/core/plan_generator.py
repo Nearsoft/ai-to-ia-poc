@@ -39,9 +39,10 @@ class PlanGenerator:
         return {
             "original_question": prompt,
             "image": None,  # Image handling will be added in a future release.
-            "optional_responses": optional_responses,
+            "optional_responses": f"{optional_responses}",
             "metadata": metadata,
             "model_sequence": model_sequence,
+            "retrieved_knowledge": ""
         }
 
     @staticmethod
