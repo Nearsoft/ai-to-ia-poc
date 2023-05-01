@@ -113,7 +113,7 @@ class ChatGPT(AbstractModel):
                     for mn in json.loads(content)["module_sequence"]
                 ]
             case GPTTools.SOLUTION_GENERATOR:
-                solution = content.split("The answer is ")
+                solution = content.split("answer is ")
                 self.result = f"The answer is: {solution[1]}"
                 return self.result
             case _:
