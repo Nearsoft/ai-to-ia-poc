@@ -2,6 +2,7 @@
 Run the NanoChameleon demo.
 """
 import streamlit as st
+import json
 from dotenv import load_dotenv
 from src.core.plan_generator import PlanGenerator
 from src.core.orchestrator import Orchestrator
@@ -32,8 +33,18 @@ if __name__ == "__main__":
     st.subheader("Answer:")
     
     if button:
-        print("starting")
-        plan = PlanGenerator.generate_plan(question_container)
-        answer = Orchestrator.execute_plan(plan)
-        print(f"\nResult: {answer}\n")
-        st.text(answer)
+        with st.spinner('Operation in progress. Please wait.'):
+            plan = PlanGenerator.generate_plan(question_container+options_container)
+            solution = Orchestrator.execute_plan(plan)
+
+            print("------------------------ Solution ------------------------")
+            print(solution)
+            st.success('Succeeded!')
+            
+            explanation = solution["Solution"]
+            answer = solution["Answer"]
+            print(f"\nResult: {answer}\n")
+            st.text(solution["Answer"])
+            expander = st.expander("See explanation")
+            for item in explanation:
+                expander.write(f"{item}")
